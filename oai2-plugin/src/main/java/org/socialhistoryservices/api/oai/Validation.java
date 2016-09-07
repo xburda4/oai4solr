@@ -70,11 +70,15 @@ public class Validation {
      * See if the identifier exists or is invalid.
      */
     public static boolean isValidIdentifier(SolrQueryResponse response, RequestType oaiRequest) {
-
         final String identifier = oaiRequest.getIdentifier();
         if (identifier == null)
             return error(response, OAIPMHerrorcodeType.ID_DOES_NOT_EXIST);
 
+        if (identifier.startsWith("uuid")) {
+            // no validation
+            return true;
+        }
+        
         String[] split = identifier.split(":", 3);
         return (split.length == 3 && split[0].equals("oai") && split[2].length() != 0) || error(response, OAIPMHerrorcodeType.ID_DOES_NOT_EXIST);
     }
@@ -113,7 +117,6 @@ public class Validation {
      * @return True if supported
      */
     public static boolean isValidMetadataPrefix(SolrQueryResponse response, RequestType oaiRequest) {
-
         final String metadataPrefix = oaiRequest.getMetadataPrefix();
         if (metadataPrefix == null) {
             return error(response, OAIPMHerrorcodeType.NO_METADATA_FORMATS);

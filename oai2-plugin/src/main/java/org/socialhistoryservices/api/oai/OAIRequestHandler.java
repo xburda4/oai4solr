@@ -226,7 +226,15 @@ public class OAIRequestHandler extends RequestHandlerBase {
                 if (!Validation.isValidMetadataPrefix(response, oaiRequest)) {
                     return;
                 }
-                addToQuery(String.format("%s:\"%s\"", Parameters.getParam("field_index_identifier"), Parsing.stripOaiPrefix(oaiRequest.getIdentifier())), q);
+
+                String identifier = oaiRequest.getIdentifier();
+                
+                // remove all prefixes (oai and domain)
+                identifier = Parsing.stripOaiPrefix(oaiRequest.getIdentifier());
+                // replace all doubledots
+                identifier = identifier.replaceAll(":", "\\\\:");
+                
+                addToQuery(String.format("%s:\"%s\"", Parameters.getParam("field_index_identifier"), identifier), q);
                 docList = runQuery(request, q, 0, 1);
                 oai.setGetRecord(getRecord(response, docList));
                 break;
@@ -268,7 +276,7 @@ public class OAIRequestHandler extends RequestHandlerBase {
         final QParser parser = QParser.getParser(join, QParserPlugin.DEFAULT_QTYPE, request);
 
         Query filter = null;
-        if (true == Parameters.getParam("enable_filter_query")) {
+        if (true == (Boolean)Parameters.getParam("enable_filter_query")) {
             final String fq = request.getParams().get("fq");
             if (fq != null) {
                 filter = QParser.getParser(fq, QParserPlugin.DEFAULT_QTYPE, request).getQuery();
