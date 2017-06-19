@@ -164,6 +164,8 @@ public class OAIQueryResponseWriter implements org.apache.solr.response.QueryRes
             marshaller.marshal(element, writer);
         } catch (JAXBException e) {
             error(writer, e.getMessage());
+        } catch (NullPointerException e){
+            error(writer,e.getMessage());
         }
     }
 

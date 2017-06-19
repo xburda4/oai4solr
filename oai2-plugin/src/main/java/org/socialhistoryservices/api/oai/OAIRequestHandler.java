@@ -269,7 +269,7 @@ public class OAIRequestHandler extends RequestHandlerBase {
         final QParser parser = QParser.getParser(join, QParserPlugin.DEFAULT_QTYPE, request);
 
         Query filter = null;
-        if (true == Parameters.getParam("enable_filter_query")) {
+        if (true == Boolean.parseBoolean((Parameters.getParam("enable_filter_query")).toString())) {
             final String fq = request.getParams().get("fq");
             if (fq != null) {
                 filter = QParser.getParser(fq, QParserPlugin.DEFAULT_QTYPE, request).getQuery();
@@ -374,6 +374,8 @@ public class OAIRequestHandler extends RequestHandlerBase {
         String solr_home = SolrResourceLoader.locateSolrHome();
         if (solr_home == null)
             solr_home = System.getProperty("solr.solr.home");
+        if ("".equals(solr_home))
+            solr_home = "/opt/solr/server/solr";
         String oai_home = (String) args.get("oai_home");
         oai_home = (oai_home == null)
                 ? solr_home + File.separatorChar + "oai"
