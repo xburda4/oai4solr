@@ -76,7 +76,7 @@ public class Validation {
             return error(response, OAIPMHerrorcodeType.ID_DOES_NOT_EXIST);
 
         String[] split = identifier.split(":", 3);
-        return (split.length == 3 && split[0].equals("oai") && split[2].length() != 0) || error(response, OAIPMHerrorcodeType.ID_DOES_NOT_EXIST);
+        return (split.length == 2 && split[0].equals("uuid")) || error(response, OAIPMHerrorcodeType.ID_DOES_NOT_EXIST);
     }
 
     /**
